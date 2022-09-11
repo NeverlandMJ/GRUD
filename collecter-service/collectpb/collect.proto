@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package collectpb;
+
+option go_package="github.com/NeverlandMJ/GRUD/collecter-service/collectpb";
+
+service CollecterService {
+    rpc SavePosts(DownloadReq) returns (Empty);
+}
+
+message DownloadReq {
+    int32 page = 1;
+}
+
+message Empty {}
