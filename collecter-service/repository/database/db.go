@@ -31,10 +31,14 @@ func (p *PostgresDB) SavePost(ctx context.Context, data []entity.Data) error {
 		return err
 	}
 
-	query := `INSERT INTO posts (id, user_id, title, body) VALUE ($1, $2, $3, $4)`
+	stmt, err := tx.Prepare("INSERT INTO posts (id, user_id, title, body) VALUES ($1, $2, $3, $4)")
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
 
 	for _, d := range data {
-		_, err := tx.ExecContext(ctx, query, d.ID, d.UserID, d.Title, d.Body)
+		_, err = stmt.ExecContext(ctx, d.ID, d.UserID, d.Title, d.Body)
 		if err != nil {
 			tx.Rollback()
 			return err
@@ -42,5 +46,6 @@ func (p *PostgresDB) SavePost(ctx context.Context, data []entity.Data) error {
 	}
 
 	tx.Commit()
+	stmt.Close()
 	return nil
 }

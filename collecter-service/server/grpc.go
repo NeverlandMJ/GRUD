@@ -26,46 +26,53 @@ func New(svc service.Service) Server {
 }
 
 func (s Server) SavePosts(ctx context.Context, req *collectpb.DownloadReq) (*collectpb.Empty, error) {
-	g := int(req.GetPage())
-	s.GetPosts(g)
+	pages := int(req.GetPage())
+
+	var wg sync.WaitGroup
+	ch := make(chan error)
+
+	for i := 1; i <= pages; i++ {
+		wg.Add(1)
+		go func(page int) {
+			err := s.GetAndSavePosts(page)
+			if err != nil {
+				ch <- err
+				return
+			}
+			ch <- nil
+			defer wg.Done()
+		}(i)
+	}
+
+	err := <-ch
+	if err != nil {
+		return nil, err
+	}
 	return &collectpb.Empty{}, nil
 }
 
-func (s Server) GetPosts(g int) error {
-	// var mux sync.Mutex
-	var wg sync.WaitGroup
-	wg.Add(g)
-
-	for i := 1; i <= g; i++ {
-		k := strconv.Itoa(i)
-		go func() {
-			defer wg.Done()
-			url := "https://gorest.co.in/public/v1/posts?page=" + url.QueryEscape(k)
-			resp, err := http.Get(url)
-			if err != nil {
-				panic(err)
-			}
-			defer resp.Body.Close()
-			body, err := ioutil.ReadAll(resp.Body)
-			if err != nil {
-				panic(err)
-			}
-
-			data := new(entity.Post)
-			err = json.Unmarshal(body, data)
-			if err != nil {
-				panic(err)
-			}
-
-			err = s.svc.SavePost(context.Background(), data.Data)
-			if err != nil {
-				panic(err)
-			}
-
-		}()
+func (s Server) GetAndSavePosts(page int) error {
+	p := strconv.Itoa(page)
+	url := "https://gorest.co.in/public/v1/posts?page=" + url.QueryEscape(p)
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return err
 	}
 
-	wg.Wait()
+	data := new(entity.Post)
+	err = json.Unmarshal(body, data)
+	if err != nil {
+		return err
+	}
 
+	err = s.svc.SavePost(context.Background(), data.Data)
+	if err != nil {
+		return err
+	}
 	return nil
 }
