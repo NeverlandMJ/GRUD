@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package collectpb;
+
+option go_package="github.com/NeverlandMJ/GRUD/grud-service/grudpb";
+
+service GrudService {
+    
+}
