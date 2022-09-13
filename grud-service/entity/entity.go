@@ -1,8 +1,8 @@
 package entity
 
 type Data struct {
-	ID     int    `json:"id"`
-	UserID int    `json:"user_id"`
-	Title  string `json:"title"`
-	Body   string `json:"body"`
+	ID     int    `db:"id"`
+	UserID int    `db:"user_id"`
+	Title  string `db:"title"`
+	Body   string `db:"body"`
 }
