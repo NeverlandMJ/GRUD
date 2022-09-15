@@ -2,29 +2,58 @@ syntax = "proto3";
 
 package grudpb;
 
+import "google/protobuf/empty.proto";
+
 option go_package="github.com/NeverlandMJ/GRUD/api-gateway/protos/grudpb";
 
 service GrudService {
-    rpc GetPostsByUserID (GetUserPostsRequest) returns (GetUserPostsResponse);
-    rpc GetPostByID (GetPostByIDRequest) returns (Data);
+  rpc GetPostsByUserID (GetUserPostsRequest) returns (GetPostsResponse);
+  rpc GetPostByID (GetPostByIDRequest) returns (Post);
+  rpc DeletePost (DeletePostRequest) returns (google.protobuf.Empty);
+  rpc UpdateTitle(UpdateTitleRequest) returns (Post);
+  rpc UpdateBody(UpdateBodyRequest) returns (Post);
+  rpc ListPosts(ListPostsRequest) returns (ListPostsResponse);
 }
 
 message GetUserPostsRequest {
-  int32 user_id = 1;
+  int32 userID = 1;
 }
 
-message Data {
+message Post {
   int32 id = 1;
   int32 user_id = 2;
   string title = 3;
   string body = 4;
 }
 
-message GetUserPostsResponse {
-  repeated Data datas = 1;
+message GetPostsResponse {
+  repeated Post posts = 1;
+}
+
+message ListPostsResponse {
+  GetPostsResponse data = 1;
+  int32 all = 2;
 }
 
 message GetPostByIDRequest {
-  int32 post_id = 1;
+  int32 postID = 1;
 }
 
+message DeletePostRequest {
+  int32 postID = 1;
+}
+
+message UpdateTitleRequest {
+  int32 postID = 1;
+  string newTitle = 2;
+}
+
+message UpdateBodyRequest {
+  int32 postID = 1;
+  string newBody = 2;
+}
+
+message ListPostsRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}

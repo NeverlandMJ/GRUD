@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -22,8 +23,12 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GrudServiceClient interface {
-	GetPostsByUserID(ctx context.Context, in *GetUserPostsRequest, opts ...grpc.CallOption) (*GetUserPostsResponse, error)
-	GetPostByID(ctx context.Context, in *GetPostByIDRequest, opts ...grpc.CallOption) (*Data, error)
+	GetPostsByUserID(ctx context.Context, in *GetUserPostsRequest, opts ...grpc.CallOption) (*GetPostsResponse, error)
+	GetPostByID(ctx context.Context, in *GetPostByIDRequest, opts ...grpc.CallOption) (*Post, error)
+	DeletePost(ctx context.Context, in *DeletePostRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateTitle(ctx context.Context, in *UpdateTitleRequest, opts ...grpc.CallOption) (*Post, error)
+	UpdateBody(ctx context.Context, in *UpdateBodyRequest, opts ...grpc.CallOption) (*Post, error)
+	ListPosts(ctx context.Context, in *ListPostsRequest, opts ...grpc.CallOption) (*ListPostsResponse, error)
 }
 
 type grudServiceClient struct {
@@ -34,8 +39,8 @@ func NewGrudServiceClient(cc grpc.ClientConnInterface) GrudServiceClient {
 	return &grudServiceClient{cc}
 }
 
-func (c *grudServiceClient) GetPostsByUserID(ctx context.Context, in *GetUserPostsRequest, opts ...grpc.CallOption) (*GetUserPostsResponse, error) {
-	out := new(GetUserPostsResponse)
+func (c *grudServiceClient) GetPostsByUserID(ctx context.Context, in *GetUserPostsRequest, opts ...grpc.CallOption) (*GetPostsResponse, error) {
+	out := new(GetPostsResponse)
 	err := c.cc.Invoke(ctx, "/grudpb.GrudService/GetPostsByUserID", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -43,9 +48,45 @@ func (c *grudServiceClient) GetPostsByUserID(ctx context.Context, in *GetUserPos
 	return out, nil
 }
 
-func (c *grudServiceClient) GetPostByID(ctx context.Context, in *GetPostByIDRequest, opts ...grpc.CallOption) (*Data, error) {
-	out := new(Data)
+func (c *grudServiceClient) GetPostByID(ctx context.Context, in *GetPostByIDRequest, opts ...grpc.CallOption) (*Post, error) {
+	out := new(Post)
 	err := c.cc.Invoke(ctx, "/grudpb.GrudService/GetPostByID", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *grudServiceClient) DeletePost(ctx context.Context, in *DeletePostRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/grudpb.GrudService/DeletePost", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *grudServiceClient) UpdateTitle(ctx context.Context, in *UpdateTitleRequest, opts ...grpc.CallOption) (*Post, error) {
+	out := new(Post)
+	err := c.cc.Invoke(ctx, "/grudpb.GrudService/UpdateTitle", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *grudServiceClient) UpdateBody(ctx context.Context, in *UpdateBodyRequest, opts ...grpc.CallOption) (*Post, error) {
+	out := new(Post)
+	err := c.cc.Invoke(ctx, "/grudpb.GrudService/UpdateBody", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *grudServiceClient) ListPosts(ctx context.Context, in *ListPostsRequest, opts ...grpc.CallOption) (*ListPostsResponse, error) {
+	out := new(ListPostsResponse)
+	err := c.cc.Invoke(ctx, "/grudpb.GrudService/ListPosts", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -56,8 +97,12 @@ func (c *grudServiceClient) GetPostByID(ctx context.Context, in *GetPostByIDRequ
 // All implementations must embed UnimplementedGrudServiceServer
 // for forward compatibility
 type GrudServiceServer interface {
-	GetPostsByUserID(context.Context, *GetUserPostsRequest) (*GetUserPostsResponse, error)
-	GetPostByID(context.Context, *GetPostByIDRequest) (*Data, error)
+	GetPostsByUserID(context.Context, *GetUserPostsRequest) (*GetPostsResponse, error)
+	GetPostByID(context.Context, *GetPostByIDRequest) (*Post, error)
+	DeletePost(context.Context, *DeletePostRequest) (*emptypb.Empty, error)
+	UpdateTitle(context.Context, *UpdateTitleRequest) (*Post, error)
+	UpdateBody(context.Context, *UpdateBodyRequest) (*Post, error)
+	ListPosts(context.Context, *ListPostsRequest) (*ListPostsResponse, error)
 	mustEmbedUnimplementedGrudServiceServer()
 }
 
@@ -65,11 +110,23 @@ type GrudServiceServer interface {
 type UnimplementedGrudServiceServer struct {
 }
 
-func (UnimplementedGrudServiceServer) GetPostsByUserID(context.Context, *GetUserPostsRequest) (*GetUserPostsResponse, error) {
+func (UnimplementedGrudServiceServer) GetPostsByUserID(context.Context, *GetUserPostsRequest) (*GetPostsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPostsByUserID not implemented")
 }
-func (UnimplementedGrudServiceServer) GetPostByID(context.Context, *GetPostByIDRequest) (*Data, error) {
+func (UnimplementedGrudServiceServer) GetPostByID(context.Context, *GetPostByIDRequest) (*Post, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPostByID not implemented")
+}
+func (UnimplementedGrudServiceServer) DeletePost(context.Context, *DeletePostRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeletePost not implemented")
+}
+func (UnimplementedGrudServiceServer) UpdateTitle(context.Context, *UpdateTitleRequest) (*Post, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateTitle not implemented")
+}
+func (UnimplementedGrudServiceServer) UpdateBody(context.Context, *UpdateBodyRequest) (*Post, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateBody not implemented")
+}
+func (UnimplementedGrudServiceServer) ListPosts(context.Context, *ListPostsRequest) (*ListPostsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListPosts not implemented")
 }
 func (UnimplementedGrudServiceServer) mustEmbedUnimplementedGrudServiceServer() {}
 
@@ -120,6 +177,78 @@ func _GrudService_GetPostByID_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GrudService_DeletePost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePostRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GrudServiceServer).DeletePost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/grudpb.GrudService/DeletePost",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GrudServiceServer).DeletePost(ctx, req.(*DeletePostRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GrudService_UpdateTitle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateTitleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GrudServiceServer).UpdateTitle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/grudpb.GrudService/UpdateTitle",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GrudServiceServer).UpdateTitle(ctx, req.(*UpdateTitleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GrudService_UpdateBody_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateBodyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GrudServiceServer).UpdateBody(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/grudpb.GrudService/UpdateBody",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GrudServiceServer).UpdateBody(ctx, req.(*UpdateBodyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GrudService_ListPosts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPostsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GrudServiceServer).ListPosts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/grudpb.GrudService/ListPosts",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GrudServiceServer).ListPosts(ctx, req.(*ListPostsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GrudService_ServiceDesc is the grpc.ServiceDesc for GrudService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -134,6 +263,22 @@ var GrudService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetPostByID",
 			Handler:    _GrudService_GetPostByID_Handler,
+		},
+		{
+			MethodName: "DeletePost",
+			Handler:    _GrudService_DeletePost_Handler,
+		},
+		{
+			MethodName: "UpdateTitle",
+			Handler:    _GrudService_UpdateTitle_Handler,
+		},
+		{
+			MethodName: "UpdateBody",
+			Handler:    _GrudService_UpdateBody_Handler,
+		},
+		{
+			MethodName: "ListPosts",
+			Handler:    _GrudService_ListPosts_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

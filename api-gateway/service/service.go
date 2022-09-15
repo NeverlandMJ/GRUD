@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/NeverlnadMJ/GRUD/api-gateway/pkg/request"
 	"github.com/NeverlnadMJ/GRUD/api-gateway/pkg/response"
 )
 
@@ -15,8 +16,12 @@ type Collecter interface {
 }
 
 type Grud interface {
-	GetUserPosts(ctx context.Context, userID int) ([]response.DataResponse, error)
-	GetPostByID(ctx context.Context, postID int) (response.DataResponse, error)
+	GetUserPosts(ctx context.Context, userID int) ([]response.Post, error)
+	GetPostByID(ctx context.Context, postID int) (response.Post, error)
+	DeletePost(ctx context.Context, postID int) error
+	UpdateTitle(ctx context.Context, req request.UpdatePostRequest) (response.Post, error)
+	UpdateBody(ctx context.Context, req request.UpdatePostRequest) (response.Post, error)
+	ListPosts(ctx context.Context, page, limit int) ([]response.Post, int, error)
 }
 
 func NewService(collecterURL, grudURL string) Service {

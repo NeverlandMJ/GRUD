@@ -2,10 +2,8 @@ package service
 
 import (
 	"context"
-	"database/sql"
-	"errors"
+
 	"github.com/NeverlandMJ/GRUD/grud-service/entity"
-	"github.com/NeverlandMJ/GRUD/grud-service/errs"
 	db "github.com/NeverlandMJ/GRUD/grud-service/repository/database"
 )
 
@@ -24,13 +22,21 @@ func (s Service) GetPostsByUserID(ctx context.Context, userID int) ([]entity.Dat
 }
 
 func (s Service) GetPostByID(ctx context.Context, postID int) (entity.Data, error) {
-	d, err := s.repo.GetPostByID(ctx, postID)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return entity.Data{}, errs.ErrPostNotFound
-		}
-		return entity.Data{}, err
-	}
+	return s.repo.GetPostByID(ctx, postID)
+}
 
-	return d, nil
+func (s Service) DeletePost(ctx context.Context, postID int) error {
+	return s.repo.DeletePost(ctx, postID)
+}
+
+func (s Service) UpdateTitle(ctx context.Context, postID int, newTitle string) (entity.Data, error) {
+	return s.repo.UpdateTitle(ctx, postID, newTitle)
+}
+
+func (s Service) UpdateBody(ctx context.Context, postID int, newBody string) (entity.Data, error) {
+	return s.repo.UpdateBody(ctx, postID, newBody)
+}
+
+func (s Service) ListPosts(ctx context.Context, page, limit int) ([]entity.Data, int, error) {
+	return s.repo.ListPosts(ctx, page, limit)
 }
