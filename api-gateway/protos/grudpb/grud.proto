@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package grudpb;
 
-option go_package="github.com/NeverlandMJ/GRUD/grud-service/grudpb";
+option go_package="github.com/NeverlandMJ/GRUD/api-gateway/protos/grudpb";
 
 service GrudService {
     rpc GetPostsByUserID (GetUserPostsRequest) returns (GetUserPostsResponse);

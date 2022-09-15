@@ -7,10 +7,11 @@ import (
 
 const (
 	collecterURL = "localhost:8001"
+	grudURL      = "localhost:8002"
 )
 
 func main() {
-	h := api.NewHandler(service.NewService(collecterURL))
+	h := api.NewHandler(service.NewService(collecterURL, grudURL))
 
 	router := api.NewRouter(h)
 

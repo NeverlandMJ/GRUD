@@ -52,7 +52,7 @@ func (s Server) GetPostByID(ctx context.Context, req *grudpb.GetPostByIDRequest)
 		if errors.Is(err, errs.ErrPostNotFound) {
 			return nil, status.Error(codes.NotFound, err.Error())
 		}
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	return &grudpb.Data{

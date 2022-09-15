@@ -13,7 +13,8 @@ func NewRouter(h Handler) *gin.Engine {
 	router.Use(cors.New(config))
 
 	router.GET("/download/pages/:limit", h.SavePosts)
+	router.GET("/posts/:userID", h.GetPostsByUserID)
+	router.GET("/post/:postID", h.GetPostByID)
 
 	return router
-
 }

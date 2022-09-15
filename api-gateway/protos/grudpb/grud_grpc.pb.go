@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.15.8
-// source: grudpb/grud.proto
+// source: protos/grudpb/grud.proto
 
 package grudpb
 
@@ -137,5 +137,5 @@ var GrudService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "grudpb/grud.proto",
+	Metadata: "protos/grudpb/grud.proto",
 }

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package collectpb;
 
-option go_package="github.com/NeverlandMJ/GRUD/api-gateway/v1/collectpb";
+option go_package="github.com/NeverlandMJ/GRUD/api-gateway/protos/collectpb";
 
 service CollecterService {
     rpc SavePosts(DownloadReq) returns (Empty);

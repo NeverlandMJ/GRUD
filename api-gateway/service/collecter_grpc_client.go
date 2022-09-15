@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/NeverlnadMJ/GRUD/api-gateway/v1/collectpb"
+	"github.com/NeverlnadMJ/GRUD/api-gateway/protos/collectpb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
